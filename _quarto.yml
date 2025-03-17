@@ -1,0 +1,13 @@
+project:
+  type: default
+  output-dir: docs
+  
+toc: true
+
+execute:
+  echo: false
+
+format:
+  html:
+    page-layout: full
+    self-contained: true
