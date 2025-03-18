@@ -11,3 +11,8 @@ format:
   html:
     page-layout: full
     self-contained: true
+metadata:
+  author:
+    - "Dawid Żak"
+    - "Szymon Hołysz"
+  date: "today"
