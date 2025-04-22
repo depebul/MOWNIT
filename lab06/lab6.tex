@@ -1,0 +1,79 @@
+
+\documentclass{article}
+
+\usepackage[pdftex]{graphicx}
+\usepackage[cp1250]{inputenc}
+\usepackage[OT4]{polski}
+
+\usepackage{units}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{enumitem}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+
+
+\newcommand{\kom}[1]{}%komentarz
+
+
+\title{Kwadratury}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+
+\noindent
+\textbf{Zadanie 1.}
+Wiadomo, ¿e
+
+\begin{equation}
+\int_0^1 \frac{4}{1+x^2} \diff x = \pi\,.
+\end{equation}
+
+\noindent
+Powy¿sz¹ równoœæ mo¿na wykorzystaæ do obliczenia przybli¿onej wartoœci $\pi$ poprzez ca³kowanie numeryczne. \\
+
+\begin{enumerate}[label=(\alph*)]
+
+\item
+Oblicz wartoœæ powy¿szej ca³ki, korzystaj¹c ze z³o¿onych kwadratur otwartej prostok¹tów (ang. mid-point rule), trapezów i Simpsona.
+Mo¿na wykorzystaæ funkcje \texttt{integrate.trapz} i \texttt{integrate.simps} z biblioteki \texttt{scipy}.
+Na przedziale ca³kowania rozmieœæ $2^m+1$ równoodleg³ych wêz³ów.
+W kolejnych próbach $m$ wzrasta o 1, tzn. miêdzy ka¿de dwa s¹siednie wêz³y dodawany jest nowy wêze³, a ich zagêszczenie zwiêksza siê dwukrotnie.
+Przyjmij zakres wartoœci $m$ od 1 do 25.
+
+Dla ka¿dej metody narysuj wykres wartoœci bezwzglêdnej b³êdu wzglêdnego w zale¿noœci od
+liczby ewaluacji funkcji podca³kowej, $n+1$ (gdzie $n = 1/h$, z krokiem $h$).
+Wyniki przedstaw na wspólnym wykresie, u¿ywaj¹c skali logarytmicznej na obu osiach.
+
+
+\item
+Czy istnieje pewna wartoœæ, poni¿ej której zmniejszanie kroku $h$ nie zmniejsza ju¿ b³êdu kwadratury?
+Porównaj wartoœæ $h_{\min}$, odpowiadaj¹c¹ minimum wartoœci bezwzglêdnej b³êdu wzglêdnego, z wartoœci¹ wyznaczon¹ w laboratorium 1.
+
+\item
+Dla ka¿dej z u¿ytych metod porównaj empiryczny rz¹d zbie¿noœci z rz¹d zbie¿noœci przewidywanym przez teoriê.
+Aby wyniki mia³y sens, do obliczenia rzêdu empirycznego u¿yj wartoœci $h$ z zakresu, w którym b³¹d metody przewa¿a nad b³êdem numerycznym.
+
+\end{enumerate}
+
+ 
+\noindent
+\textbf{Zadanie 2.}
+Oblicz wartoœæ ca³ki
+\begin{equation}
+\int_0^1 \frac{4}{1+x^2} \diff x
+\end{equation}
+metod¹ Gaussa-Legendre'a.
+Narysuj wykres wartoœci bezwzglêdnej b³êdu wzglêdnego w zale¿noœci od liczby ewaluacji funkcji podca³kowej, $n+1$.
+Przyjmij na tyle du¿y zakres $n$, aby wykryæ, kiedy b³¹d numeryczny zaczyna przewa¿aæ nad b³êdem metody.
+Postaraj siê umiejscowiæ otrzymane wyniki na wykresie stworzonym w podpunkcie (a).
+
+
+\end{document}
+
