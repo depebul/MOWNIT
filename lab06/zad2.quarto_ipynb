@@ -1,0 +1,325 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "# Laboratorium 6 - Kwadratury\n",
+        "\n",
+        "Zadanie 1. Wiadomo, że\n",
+        "$$\n",
+        "\\int_{0}^{1} \\frac{4}{1+x^2} dx = \\pi. \\quad (1)\n",
+        "$$\n",
+        "Powyższą równość można wykorzystać do obliczenia przybliżonej wartości $\\pi$ poprzez całkowanie numeryczne.\n",
+        "\n",
+        "### Zadanie 1 (a)\n",
+        "\n",
+        "Oblicz wartość powyższej całki, korzystając ze złożonych kwadratur otwartej prostokątów (ang. mid-point rule), trapezów i Simpsona.\n",
+        "Można wykorzystać funkcje $\\texttt{integrate.trapz}$ i $\\texttt{integrate.simps}$ z biblioteki $\\texttt{scipy}$.\n",
+        "Na przedziale całkowania rozmieść $2^m+1$ równoodl$egłych węzłów.\n",
+        "W kolejnych próbach $m$ wzrasta o 1, tzn. między każde dwa sąsiednie węzły dodawany jest nowy węzeł, a ich zagęszczenie zwiększa się dwukrotnie.\n",
+        "Przyjmij zakres wartości $m$ od 1 do 25.\n"
+      ],
+      "id": "9fae8479"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import pandas as pd\n",
+        "from scipy import integrate\n",
+        "import seaborn as sns\n",
+        "from IPython.display import display\n",
+        "\n",
+        "sns.set_style(\"darkgrid\")"
+      ],
+      "id": "bce9c3da",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def f(x):\n",
+        "    return 4 / (1 + x**2)\n",
+        "\n",
+        "\n",
+        "a = 0\n",
+        "b = 1\n",
+        "width = b - a\n",
+        "m_vec = np.arange(1, 26)\n",
+        "n_vec = 2**m_vec + 1"
+      ],
+      "id": "483467eb",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def quad_int(xs, f):\n",
+        "    s = 0\n",
+        "    for i in range(len(xs) - 1):\n",
+        "        dx = xs[i + 1] - xs[i]\n",
+        "        x = (xs[i] + xs[i + 1]) / 2\n",
+        "        s += f(x) * dx\n",
+        "    return s\n",
+        "\n",
+        "\n",
+        "def trap(xs, f):\n",
+        "    return integrate.trapezoid([f(xs)], x=xs)\n",
+        "\n",
+        "\n",
+        "def simpson(xs, f):\n",
+        "    return integrate.simpson(f(xs), x=xs)"
+      ],
+      "id": "39ebf556",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "values_list = []\n",
+        "formula_list = [quad_int, trap, simpson]\n",
+        "\n",
+        "for formula in formula_list:\n",
+        "    values = []\n",
+        "    n_nodes = [2**m + 1 for m in m_vec]\n",
+        "    x_nodes = [np.linspace(a, b, n) for n in n_nodes]\n",
+        "    for nodes in x_nodes:\n",
+        "        value = formula(nodes, f)\n",
+        "        values.append(value)\n",
+        "    values_list.append(values)"
+      ],
+      "id": "aff3d803",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "errors_list = []\n",
+        "\n",
+        "for i, values in enumerate(values_list):\n",
+        "    errors = []\n",
+        "    for j, value in enumerate(values):\n",
+        "        error = np.abs(value - np.pi) / np.pi\n",
+        "        errors.append(error)\n",
+        "    errors_list.append(errors)"
+      ],
+      "id": "84cb5b81",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Dla każdej metody narysuj wykres wartości bezwzględnej błędu względnego w zależności od\n",
+        "liczby ewaluacji funkcji podcałkowej, $n+1$ (gdzie $n = 1/h$, z krokiem $h$).\n",
+        "Wyniki przedstaw na wspólnym wykresie, używając skali logarytmicznej na obu osiach.\n"
+      ],
+      "id": "4eeb0124"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "plt.figure(figsize=(10, 6))\n",
+        "\n",
+        "plt.plot(2**m_vec + 1, errors_list[0], label=\"Rectangular\", marker=\"o\")\n",
+        "plt.plot(2**m_vec + 1, errors_list[1], label=\"Trapezoidal\", marker=\"o\")\n",
+        "plt.plot(2**m_vec + 1, errors_list[2], label=\"Simpson\", marker=\"o\")\n",
+        "plt.yscale(\"log\")\n",
+        "plt.xscale(\"log\")\n",
+        "plt.xlabel(\"Number of nodes\")\n",
+        "plt.ylabel(\"Relative error\")\n",
+        "plt.title(\"Integration error for different methods\")\n",
+        "plt.legend()\n",
+        "plt.show()"
+      ],
+      "id": "437df915",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Nieciągłość wykresu dla metody Simpsona wynika z osiągnięcia precyzji większej niż precyzja float64, umieszczenie wartości zerowych na wykresie logarytmicznym jest niemożliwe.\n",
+        "Metoda Simpsona jest też najdokładniejsza spośród trzech rozważanych.\n",
+        "\n",
+        "### Zadanie 1 (b)\n",
+        "\n",
+        "Czy istnieje pewna wartość, poniżej której zmniejszanie kroku $h$ nie zmniejsza już błędu kwadratury?\n",
+        "Porównaj wartość $h_{\\min}$, odpowiadającą minimum wartości bezwzględnej błędu względnego, z wartością wyznaczoną w laboratorium 1.\n"
+      ],
+      "id": "0db7bf49"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "hs = 1.0 / (2**m_vec)\n",
+        "\n",
+        "min_list = []\n",
+        "for i, values in enumerate(errors_list):\n",
+        "    min_value = min(values)\n",
+        "    min_index = values.index(min_value)\n",
+        "    min_list.append((hs[min_index]))\n",
+        "\n",
+        "min_df = pd.DataFrame(\n",
+        "    {\n",
+        "        \"Method\": [\"Rectangular\", \"Trapezoidal\", \"Simpson\"],\n",
+        "        \"h_min\": min_list,\n",
+        "    }\n",
+        ")\n",
+        "display(min_df)"
+      ],
+      "id": "c14737ce",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Na wykresie powyżej można zauważyć moment, w którym zmniejszanie kroku przestaje zmniejszać błąd kwadratury, a nawet go zwiększa.\n",
+        "Wartość $h$, w którym błąd osiąga minimum jest zbliżony dla metody prostokątów i trapezów oraz znacznie mniejszy dla metody Simpsona. Wynika to z tego, że błąd tej metody znacznie szybciej zbiega do zera. Obliczony krok dla minimalnego błędu jest porównywalny do tego obliczonego w laboratorium nr. 1 ($\\cong 10^{-8}$)\n",
+        "\n",
+        "![image.png](attachment:image.png)\n",
+        "\n",
+        "Wykres ilustrujący wyniki z pierwszego laboratorium.\n",
+        "\n",
+        "### Zadanie 1 (c)\n",
+        "Dla każdej z użytych metod porównaj empiryczny rząd zbieżności z rząd zbieżności przewidywanym przez teorię.\n",
+        "Aby wyniki miały sens, do obliczenia rzędu empirycznego użyj wartości $h$ z zakresu, w którym błąd metody przeważa nad błędem numerycznym.\n"
+      ],
+      "id": "0caaef1a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "emp_conv_list = [2, 2, 4]"
+      ],
+      "id": "d1171528",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "h_vec = width / n_vec\n",
+        "rounding_errors_list = n_vec * np.finfo(np.float64).eps\n",
+        "\n",
+        "\n",
+        "def calculate_convergence_rate(errors):\n",
+        "    return [\n",
+        "        np.log(errors[i + 1] / errors[i]) / np.log(h_vec[i + 1] / h_vec[i])\n",
+        "        for i in range(len(errors) - 1)\n",
+        "        if rounding_errors_list[i] < errors[i]\n",
+        "    ]\n",
+        "\n",
+        "\n",
+        "conv_rect = calculate_convergence_rate(errors_list[0])\n",
+        "conv_trap = calculate_convergence_rate(errors_list[1])\n",
+        "conv_simp = calculate_convergence_rate(errors_list[2])\n",
+        "\n",
+        "conv_df_rect = pd.DataFrame(conv_rect, columns=[\"Rectangular\"])\n",
+        "display(conv_df_rect)\n",
+        "conv_df_trap = pd.DataFrame(conv_trap, columns=[\"Trapezoidal\"])\n",
+        "display(conv_df_trap)\n",
+        "conv_df_simp = pd.DataFrame(conv_simp, columns=[\"Simpson\"])\n",
+        "display(conv_df_simp)"
+      ],
+      "id": "c9ee8978",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Obliczone rzędy zbieżności dla metody prostokątów i trapezów to 2 (zgodne z teoretycznym rzędem zbieżności), a dla metody Simpsona 6 - co nie zgadza się z wartością teoretyczną równą 4. Może to wynikać z faktu, że precyzja obliczeń nie pozwala obliczyć rzędu dla kolejnych wartości $m$.\n",
+        "\n",
+        "# Zadanie 2.\n",
+        "Oblicz wartość całki\n",
+        "$$\n",
+        "\\begin{equation}\n",
+        "\\int_0^1 \\frac{4}{1+x^2} dx\n",
+        "\\end{equation}\n",
+        "$$\n",
+        "metodą Gaussa-Legendre'a.\n",
+        "Narysuj wykres wartości bezwzględnej błędu względnego w zależności od liczby ewaluacji funkcji podcałkowej, $n+1$.\n",
+        "Przyjmij na tyle duży zakres $n$, aby wykryć, kiedy błąd numeryczny zaczyna przeważać nad błędem metody.\n",
+        "Postaraj się umiejscowić otrzymane wyniki na wykresie stworzonym w podpunkcie (a).\n"
+      ],
+      "id": "82af799f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "m_vec_gauss = np.arange(1, 15)\n",
+        "n_vec_gauss = 2**m_vec_gauss + 1\n",
+        "leggaus_values = [np.polynomial.legendre.leggauss(n) for n in n_vec_gauss]\n",
+        "x_vec_gauss = [x_vec * 0.5 + 0.5 for x_vec, _ in leggaus_values]\n",
+        "y_vec_gauss = [w_vec for _, w_vec in leggaus_values]\n",
+        "gauss_values = [np.sum(f(x) * 0.5 * w) for x, w in zip(x_vec_gauss, y_vec_gauss)]\n",
+        "gauss_errors = [np.abs(value - np.pi) / np.pi for value in gauss_values]"
+      ],
+      "id": "7ff491af",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "plt.figure(figsize=(10, 6))\n",
+        "\n",
+        "plt.plot(2**m_vec + 1, errors_list[0], label=\"Rectangular\", marker=\"o\")\n",
+        "plt.plot(2**m_vec + 1, errors_list[1], label=\"Trapezoidal\", marker=\"o\")\n",
+        "plt.plot(2**m_vec + 1, errors_list[2], label=\"Simpson\", marker=\"o\")\n",
+        "plt.plot(2**m_vec_gauss + 1, gauss_errors, label=\"Gauss-Legendre\", marker=\"o\")\n",
+        "plt.yscale(\"log\")\n",
+        "plt.xscale(\"log\")\n",
+        "plt.xlabel(\"Number of nodes\")\n",
+        "plt.ylabel(\"Relative error\")\n",
+        "plt.title(\"Integration error for different methods\")\n",
+        "plt.legend()\n",
+        "plt.show()"
+      ],
+      "id": "9b863ebd",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Na powyższym wykresie można zauważyć, że błąd metody Gaussa - Legendre'a maleje najszybciej, ale błąd numeryczny zaczyna przeważać nad błędem metody już dla kilkunastu węzłów. Dlatego korzystając z tej metody najbardziej należy uważać na ilość węzłów wykorzystanych w obliczeniach.\n"
+      ],
+      "id": "66341fa5"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "amc_data_jupyter",
+      "language": "python",
+      "display_name": "AMC data jupyter",
+      "path": "/Users/depebul/Library/Jupyter/kernels/amc_data_jupyter"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
