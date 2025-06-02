@@ -6,7 +6,7 @@
       "source": [
         "# Laboratorium 7 - Kwadratury adaptacyjne\n"
       ],
-      "id": "2bd45816"
+      "id": "e7f664c3"
     },
     {
       "cell_type": "code",
@@ -21,7 +21,7 @@
         "\n",
         "sns.set_style(\"darkgrid\")"
       ],
-      "id": "1c332e99",
+      "id": "00389d0f",
       "execution_count": null,
       "outputs": []
     },
@@ -44,7 +44,7 @@
         "$\\texttt{scipy.integrate.quad\\_vec}$. Na liczbę ewaluacji funkcji podcałkowej można\n",
         "wpływać pośrednio, zmieniając wartość dopuszczalnego błędu (tolerancji). Przyjmij wartości tolerancji z zakresu od $10^0$ do $10^{−14}$. Liczba ewalulacji funkcji pod-całkowej zwracana jest w zmiennej $\\texttt{info.neval}$.\n"
       ],
-      "id": "e6aa2cf5"
+      "id": "253c27fc"
     },
     {
       "cell_type": "code",
@@ -60,7 +60,7 @@
         "m_vec = np.arange(1, 26)\n",
         "n_vec = 2**m_vec + 1"
       ],
-      "id": "7743f779",
+      "id": "708a94b2",
       "execution_count": null,
       "outputs": []
     },
@@ -96,7 +96,7 @@
         "        f, a, b, epsrel=epsrel, quadrature=\"gk21\", full_output=True\n",
         "    )"
       ],
-      "id": "88990d90",
+      "id": "c1b2ed03",
       "execution_count": null,
       "outputs": []
     },
@@ -125,7 +125,7 @@
         "gauss_values = [np.sum(f(x) * 0.5 * w) for x, w in zip(x_vec_gauss, y_vec_gauss)]\n",
         "gauss_errors = [np.abs(value - np.pi) / np.pi for value in gauss_values]"
       ],
-      "id": "d1d258d4",
+      "id": "ae5fc59b",
       "execution_count": null,
       "outputs": []
     },
@@ -154,7 +154,7 @@
         "    errors_list.append(errors)\n",
         "    x_arr.append(x_arr_1)"
       ],
-      "id": "4d4f0322",
+      "id": "0084bce5",
       "execution_count": null,
       "outputs": []
     },
@@ -178,17 +178,16 @@
         "plt.legend()\n",
         "plt.show()"
       ],
-      "id": "603f6f62",
+      "id": "9e5fabda",
       "execution_count": null,
       "outputs": []
     }
   ],
   "metadata": {
     "kernelspec": {
-      "name": "amc_data_jupyter",
+      "display_name": "Python 3",
       "language": "python",
-      "display_name": "AMC data jupyter",
-      "path": "/Users/depebul/Library/Jupyter/kernels/amc_data_jupyter"
+      "name": "python3"
     }
   },
   "nbformat": 4,
