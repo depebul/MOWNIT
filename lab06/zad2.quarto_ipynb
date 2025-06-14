@@ -20,7 +20,7 @@
         "W kolejnych próbach $m$ wzrasta o 1, tzn. między każde dwa sąsiednie węzły dodawany jest nowy węzeł, a ich zagęszczenie zwiększa się dwukrotnie.\n",
         "Przyjmij zakres wartości $m$ od 1 do 25.\n"
       ],
-      "id": "41c6fd47"
+      "id": "f1f9b81c"
     },
     {
       "cell_type": "code",
@@ -35,7 +35,7 @@
         "\n",
         "sns.set_style(\"darkgrid\")"
       ],
-      "id": "e7846db5",
+      "id": "656fea70",
       "execution_count": null,
       "outputs": []
     },
@@ -53,7 +53,7 @@
         "m_vec = np.arange(1, 26)\n",
         "n_vec = 2**m_vec + 1"
       ],
-      "id": "551c8c6f",
+      "id": "95f7529e",
       "execution_count": null,
       "outputs": []
     },
@@ -77,7 +77,7 @@
         "def simpson(xs, f):\n",
         "    return integrate.simpson(f(xs), x=xs)"
       ],
-      "id": "edbf608a",
+      "id": "52a29548",
       "execution_count": null,
       "outputs": []
     },
@@ -97,7 +97,7 @@
         "        values.append(value)\n",
         "    values_list.append(values)"
       ],
-      "id": "bfd9f102",
+      "id": "6508dceb",
       "execution_count": null,
       "outputs": []
     },
@@ -114,7 +114,7 @@
         "        errors.append(error)\n",
         "    errors_list.append(errors)"
       ],
-      "id": "52bbfc1d",
+      "id": "d7ea1edb",
       "execution_count": null,
       "outputs": []
     },
@@ -126,7 +126,7 @@
         "liczby ewaluacji funkcji podcałkowej, $n+1$ (gdzie $n = 1/h$, z krokiem $h$).\n",
         "Wyniki przedstaw na wspólnym wykresie, używając skali logarytmicznej na obu osiach.\n"
       ],
-      "id": "1058e635"
+      "id": "f5e1e5d0"
     },
     {
       "cell_type": "code",
@@ -145,7 +145,7 @@
         "plt.legend()\n",
         "plt.show()"
       ],
-      "id": "c5b2267c",
+      "id": "00a5c8aa",
       "execution_count": null,
       "outputs": []
     },
@@ -161,7 +161,7 @@
         "Czy istnieje pewna wartość, poniżej której zmniejszanie kroku $h$ nie zmniejsza już błędu kwadratury?\n",
         "Porównaj wartość $h_{\\min}$, odpowiadającą minimum wartości bezwzględnej błędu względnego, z wartością wyznaczoną w laboratorium 1.\n"
       ],
-      "id": "1d7c99d9"
+      "id": "ff68dbf9"
     },
     {
       "cell_type": "code",
@@ -183,7 +183,7 @@
         ")\n",
         "display(min_df)"
       ],
-      "id": "02daea47",
+      "id": "7be75fd6",
       "execution_count": null,
       "outputs": []
     },
@@ -202,7 +202,7 @@
         "Dla każdej z użytych metod porównaj empiryczny rząd zbieżności z rząd zbieżności przewidywanym przez teorię.\n",
         "Aby wyniki miały sens, do obliczenia rzędu empirycznego użyj wartości $h$ z zakresu, w którym błąd metody przeważa nad błędem numerycznym.\n"
       ],
-      "id": "8b266e85"
+      "id": "cf14a299"
     },
     {
       "cell_type": "code",
@@ -210,7 +210,7 @@
       "source": [
         "emp_conv_list = [2, 2, 4]"
       ],
-      "id": "374ae852",
+      "id": "e6554963",
       "execution_count": null,
       "outputs": []
     },
@@ -241,7 +241,7 @@
         "conv_df_simp = pd.DataFrame(conv_simp, columns=[\"Simpson\"])\n",
         "display(conv_df_simp)"
       ],
-      "id": "db25bec2",
+      "id": "55cc445c",
       "execution_count": null,
       "outputs": []
     },
@@ -263,7 +263,7 @@
         "Przyjmij na tyle duży zakres $n$, aby wykryć, kiedy błąd numeryczny zaczyna przeważać nad błędem metody.\n",
         "Postaraj się umiejscowić otrzymane wyniki na wykresie stworzonym w podpunkcie (a).\n"
       ],
-      "id": "d5eb4642"
+      "id": "0f7026c5"
     },
     {
       "cell_type": "code",
@@ -277,7 +277,7 @@
         "gauss_values = [np.sum(f(x) * 0.5 * w) for x, w in zip(x_vec_gauss, y_vec_gauss)]\n",
         "gauss_errors = [np.abs(value - np.pi) / np.pi for value in gauss_values]"
       ],
-      "id": "5d210cf3",
+      "id": "ce8d1e56",
       "execution_count": null,
       "outputs": []
     },
@@ -299,7 +299,7 @@
         "plt.legend()\n",
         "plt.show()"
       ],
-      "id": "6ba63ede",
+      "id": "8f640a76",
       "execution_count": null,
       "outputs": []
     },
@@ -309,7 +309,7 @@
       "source": [
         "Na powyższym wykresie można zauważyć, że błąd metody Gaussa - Legendre'a maleje najszybciej, ale błąd numeryczny zaczyna przeważać nad błędem metody już dla kilkunastu węzłów. Dlatego korzystając z tej metody najbardziej należy uważać na ilość węzłów wykorzystanych w obliczeniach.\n"
       ],
-      "id": "6b67a344"
+      "id": "a23a97c2"
     }
   ],
   "metadata": {
