@@ -1,0 +1,308 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        " # Laboratorium 11 - Spadek wzdłuż gradientu\n"
+      ],
+      "id": "521c1f16"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "from IPython.display import display\n",
+        "import matplotlib.pyplot as plt\n",
+        "import numpy as np\n",
+        "import copy\n",
+        "from scipy.optimize import golden\n",
+        "from itertools import cycle"
+      ],
+      "id": "08d73e30",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Zadanie 1.\n",
+        "\n",
+        "Rozwiąż ponownie problem predykcji typu nowotworu (laboratorium 2), używając metody spadku wzdłuż gradientu (ang. *gradient descent*). Stałą uczącą możesz wyznaczyć na podstawie najmniejszej i największej wartości własnej macierzy $A^T A$. Porównaj uzyskane rozwiązanie z metodą najmniejszych kwadratów, biorąc pod uwagę następujące kryteria:\n",
+        "\n",
+        "* Dokładność predykcji na zbiorze testowym\n",
+        "* Teoretyczną złożoność obliczeniową\n",
+        "* Czas obliczeń.\n"
+      ],
+      "id": "852595fa"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "labels = pd.read_csv(\"breast-cancer.labels\", header=None, names=[\"name\"])\n",
+        "column_names = labels[\"name\"].tolist()\n",
+        "\n",
+        "\n",
+        "train_data = pd.read_csv(\"breast-cancer-train.dat\", header=None, names=column_names)\n",
+        "validate_data = pd.read_csv(\n",
+        "    \"breast-cancer-validate.dat\", header=None, names=column_names\n",
+        ")"
+      ],
+      "id": "8d60874f",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Reprezentacja liniowa\n",
+        "A_train_linear = train_data.drop([\"patient ID\", \"Malignant/Benign\"], axis=1).values\n",
+        "A_validate_linear = validate_data.drop(\n",
+        "    [\"patient ID\", \"Malignant/Benign\"], axis=1\n",
+        ").values\n",
+        "\n",
+        "# Reprezentacja kwadratowa\n",
+        "selected_features = [\n",
+        "    \"radius (mean)\",\n",
+        "    \"perimeter (mean)\",\n",
+        "    \"area (mean)\",\n",
+        "    \"symmetry (mean)\",\n",
+        "]\n",
+        "\n",
+        "\n",
+        "def create_quadratic_features(data):\n",
+        "    quadratic_features = data[selected_features].copy()\n",
+        "    for feature in selected_features:\n",
+        "        quadratic_features[f\"{feature}^2\"] = data[feature] ** 2\n",
+        "    for i in range(len(selected_features)):\n",
+        "        for j in range(i + 1, len(selected_features)):\n",
+        "            feature1 = selected_features[i]\n",
+        "            feature2 = selected_features[j]\n",
+        "            quadratic_features[f\"{feature1}*{feature2}\"] = (\n",
+        "                data[feature1] * data[feature2]\n",
+        "            )\n",
+        "    return quadratic_features.values\n",
+        "\n",
+        "\n",
+        "A_train_quadratic = create_quadratic_features(train_data)\n",
+        "A_validate_quadratic = create_quadratic_features(validate_data)"
+      ],
+      "id": "e896d40f",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Wektor b dla zbioru treningowego\n",
+        "b_train = np.array(\n",
+        "    [[1, 0] if row == \"M\" else [0, 1] for row in train_data[\"Malignant/Benign\"]]\n",
+        ")\n",
+        "\n",
+        "# Wektor b dla zbioru walidacyjnego\n",
+        "b_validate = np.array(\n",
+        "    [[1, 0] if row == \"M\" else [0, 1] for row in validate_data[\"Malignant/Benign\"]]\n",
+        ")"
+      ],
+      "id": "c6d2cd32",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def classify(W, X):\n",
+        "    S = X @ W\n",
+        "    return S == np.max(S, axis=1, keepdims=True)"
+      ],
+      "id": "052fe934",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def calc_acc(P, T):\n",
+        "    accuracy = np.sum(P * T) / P.shape[0]\n",
+        "    return 100.0 * accuracy\n",
+        "\n",
+        "\n",
+        "def print_log(step, cost, train_acc, val_acc):\n",
+        "    log = (\n",
+        "        \"Step {:3d}\\tcost value: {:5.2f},\\ttrain accuracy: {:5.2f},\\t\"\n",
+        "        \"validation accuracy: {:5.2f}\"\n",
+        "    )\n",
+        "    log = log.format(step, cost.item(), train_acc.item(), val_acc.item())\n",
+        "\n",
+        "    print(log)"
+      ],
+      "id": "59f7579c",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def mse(S, T):\n",
+        "    return 0.5 * np.mean((S - T) ** 2)\n",
+        "\n",
+        "\n",
+        "def grad_mse(X, S, T):\n",
+        "    n = X.shape[0]\n",
+        "    return (1.0 / n) * X.T @ (S - T)"
+      ],
+      "id": "94d6e1d4",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def gd_fit(W0, X, T, X_val, T_val, lr=1.0, steps=100, log_every=5):\n",
+        "    n = X.shape[0]\n",
+        "    W = np.copy(W0)\n",
+        "    M = 0\n",
+        "    mu = 0.9\n",
+        "\n",
+        "    stats = []\n",
+        "\n",
+        "    for step in range(steps):\n",
+        "        S = X @ W\n",
+        "        cost_val = mse(S, T)\n",
+        "\n",
+        "        cost_grad = grad_mse(X, S, T)\n",
+        "        M = mu * M - lr * cost_grad\n",
+        "        W = W + M\n",
+        "\n",
+        "        P_train = classify(W, X)\n",
+        "        train_acc = calc_acc(P_train, T)\n",
+        "\n",
+        "        P_val = classify(W, X_val)\n",
+        "        val_acc = calc_acc(P_val, T_val)\n",
+        "\n",
+        "        stats.append((cost_val, train_acc, val_acc))\n",
+        "        if step == 0 or (step + 1) % log_every == 0:\n",
+        "            print_log(step + 1, cost_val, train_acc, val_acc)\n",
+        "\n",
+        "    return W, stats"
+      ],
+      "id": "4f4b0140",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "ATA_eigenvalues, _ = np.linalg.eig(A_train_linear.T @ A_train_linear)\n",
+        "lambda_min = np.min(ATA_eigenvalues)\n",
+        "lambda_max = np.max(ATA_eigenvalues)\n",
+        "condition_no = lambda_max / lambda_min"
+      ],
+      "id": "126ff23e",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "X = np.column_stack([A_train_linear, np.full(A_train_linear.shape[0], 1)])\n",
+        "T = b_train\n",
+        "X_val = np.column_stack([A_validate_linear, np.full(A_validate_linear.shape[0], 1)])\n",
+        "T_val = b_validate\n",
+        "\n",
+        "print(X.shape, T.shape, X_val.shape, T_val.shape)"
+      ],
+      "id": "adb08609",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "W0 = np.zeros((31, 2))"
+      ],
+      "id": "30054af5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "lr = 20 / (lambda_max)\n",
+        "\n",
+        "print(\"Learning rate: \", lr)\n",
+        "W, stats = gd_fit(W0, X, T, X_val, T_val, lr=lr, steps=1000, log_every=50)\n",
+        "\n",
+        "\n",
+        "cost = [t[0] for t in stats]\n",
+        "t_acc = [t[1] for t in stats]\n",
+        "v_acc = [t[2] for t in stats]\n",
+        "\n",
+        "plt.figure(figsize=(10, 6))\n",
+        "\n",
+        "plt.plot(t_acc, label=\"Train accuracy\")\n",
+        "plt.plot(v_acc, label=\"Validation accuracy\")\n",
+        "\n",
+        "plt.xlabel(\"Step\")\n",
+        "plt.ylabel(\"%\")\n",
+        "plt.title(\"Gradient descent accuracy\")\n",
+        "plt.legend()\n",
+        "plt.grid(True, alpha=0.3)\n",
+        "\n",
+        "plt.tight_layout()\n",
+        "plt.show()\n",
+        "\n",
+        "\n",
+        "plt.figure(figsize=(10, 6))\n",
+        "\n",
+        "plt.plot(cost, label=\"Cost\")\n",
+        "\n",
+        "plt.xlabel(\"Step\")\n",
+        "plt.title(\"Gradient descent cost\")\n",
+        "plt.legend()\n",
+        "plt.grid(True, alpha=0.3)\n",
+        "\n",
+        "plt.tight_layout()\n",
+        "plt.show()"
+      ],
+      "id": "19c56ae2",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Metodą spadku wzdłuż gradientu udało się uzyskać dokładność predykcji na zbiorze walidacyjnym na poziomie 93%. Jest to nieco mniejszy wynik o dokładności predykcji metodą najmniejszych kwadratów, która wynosiła 97%.\n",
+        "\n",
+        "Porównując czasy wykonania, należy zwrócić uwagę na znaczną przewagę metody najmniejszych kwadratów, przy której czas rozwiązywania układu równań funkcją biblioteczną numpy.linalg.solve był krótszy niż 0.1 s, natomiast znajdywanie rozwiązania metodą gradient descent trwało 1.9 s.\n",
+        "\n",
+        "Wynika to bezpośrednio ze złożoności obliczeniowej, która dla metody najmniejszych kwadratów wynosi $O(n^{3})$, gdzie $n$ to liczba parametrów, natomiast dla gradient descent - $O(ndk)$, gdzie $n$ to liczba iteracji, $d$ to liczba parametrów, a $k$ to liczba punktów danych. Stąd gradient descent może sprawdzać się tylko dla dużych liczb parametrów.\n"
+      ],
+      "id": "1aaa1003"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "amc_data_jupyter",
+      "language": "python",
+      "display_name": "AMC data jupyter",
+      "path": "/Users/depebul/Library/Jupyter/kernels/amc_data_jupyter"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
