@@ -6,7 +6,7 @@
       "source": [
         " # Laboratorium 11 - Spadek wzdłuż gradientu\n"
       ],
-      "id": "6ecfd49d"
+      "id": "5c639405"
     },
     {
       "cell_type": "code",
@@ -20,7 +20,7 @@
         "from scipy.optimize import golden\n",
         "from itertools import cycle"
       ],
-      "id": "51aa9632",
+      "id": "2568cff7",
       "execution_count": null,
       "outputs": []
     },
@@ -90,7 +90,7 @@
         " - Przyjmujemy punkty $l = b-d$, $r=a+d$,\n",
         " - Porównujemy wartości funkcji i decydujemy, czy minimum znajduje się w przedziale lewym, czy prawym i ustawiamy odpowiednio $a$ i $b$.\n"
       ],
-      "id": "de1c2e07"
+      "id": "0f3bc7b1"
     },
     {
       "cell_type": "code",
@@ -107,7 +107,7 @@
         "eps = 10e-13\n",
         "iterations = 400"
       ],
-      "id": "f57d2105",
+      "id": "73bbbab4",
       "execution_count": null,
       "outputs": []
     },
@@ -127,7 +127,7 @@
         "\n",
         "    return l_1 * A + l_2 * B"
       ],
-      "id": "93249e9a",
+      "id": "b2659da8",
       "execution_count": null,
       "outputs": []
     },
@@ -152,7 +152,7 @@
         "\n",
         "    return gradient"
       ],
-      "id": "a2a70979",
+      "id": "4ba9be6f",
       "execution_count": null,
       "outputs": []
     },
@@ -180,7 +180,7 @@
         "\n",
         "    return (copyX, costs)"
       ],
-      "id": "55c28dbb",
+      "id": "daa81fe6",
       "execution_count": null,
       "outputs": []
     },
@@ -204,7 +204,7 @@
         "    next_seed = np.random.randint(0, 1000)\n",
         "    np.random.seed(next_seed)"
       ],
-      "id": "f012a5e2",
+      "id": "bda143ee",
       "execution_count": null,
       "outputs": []
     },
@@ -216,7 +216,7 @@
         "for i, cost_history in enumerate(costs):\n",
         "    print(f\"Próba {i + 1}: {cost_history[-1]:.6f}\")"
       ],
-      "id": "e577e520",
+      "id": "d279caaa",
       "execution_count": null,
       "outputs": []
     },
@@ -226,7 +226,7 @@
       "source": [
         "Znalezione przez algorytm optymalne ścieżki ilustrują poniższe wykresy:\n"
       ],
-      "id": "040c94af"
+      "id": "34b6b27a"
     },
     {
       "cell_type": "code",
@@ -311,7 +311,7 @@
         "\n",
         "plot_robot_paths()"
       ],
-      "id": "7f63d4ea",
+      "id": "d0de4d24",
       "execution_count": null,
       "outputs": []
     },
@@ -410,7 +410,7 @@
         "\n",
         "plot_best_result()"
       ],
-      "id": "578f3a0a",
+      "id": "dc76f483",
       "execution_count": null,
       "outputs": []
     }

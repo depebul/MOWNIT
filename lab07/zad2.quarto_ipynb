@@ -6,7 +6,7 @@
       "source": [
         "# Laboratorium 7 - Kwadratury adaptacyjne\n"
       ],
-      "id": "70d0723b"
+      "id": "a1ef77bd"
     },
     {
       "cell_type": "code",
@@ -21,7 +21,7 @@
         "\n",
         "sns.set_style(\"darkgrid\")"
       ],
-      "id": "3608040e",
+      "id": "db2a9703",
       "execution_count": null,
       "outputs": []
     },
@@ -37,7 +37,7 @@
         "\n",
         "(b)   $\\int_0^1 \\Big(\\frac{1}{(x-0.3)^2 + a} + \\frac{1}{(x-0.9)^2 + b} - 6 \\Big) dx$\n"
       ],
-      "id": "e6af03cc"
+      "id": "be098426"
     },
     {
       "cell_type": "code",
@@ -133,7 +133,7 @@
         "    plt.legend()\n",
         "    plt.show()"
       ],
-      "id": "c334dcb5",
+      "id": "c42e0d70",
       "execution_count": null,
       "outputs": []
     },
@@ -143,7 +143,7 @@
       "source": [
         "### Całka (a)\n"
       ],
-      "id": "0177af50"
+      "id": "abca899f"
     },
     {
       "cell_type": "code",
@@ -173,7 +173,7 @@
         "# plot_error_func(f, np.pi)\n",
         "plot_error_func(fa, fa_real)"
       ],
-      "id": "c7046540",
+      "id": "d0101317",
       "execution_count": null,
       "outputs": []
     },
@@ -183,7 +183,7 @@
       "source": [
         "### Całka (b)\n"
       ],
-      "id": "0f5d738c"
+      "id": "42328298"
     },
     {
       "cell_type": "code",
@@ -191,7 +191,7 @@
       "source": [
         "plot_error_func(fb, fb_real)"
       ],
-      "id": "5ccf94a4",
+      "id": "2594fb64",
       "execution_count": null,
       "outputs": []
     },
@@ -220,7 +220,7 @@
         "\n",
         "Podsumowując, metody adaptacyjne, a w szczególności metoda Gaussa-Kronroda dają dokładniejsze wyniki od metod nieadaptacyjnych, ale ich użycie w przypadku prostych funkcji może nie być opłacalne.\n"
       ],
-      "id": "bbb13b57"
+      "id": "917445ab"
     }
   ],
   "metadata": {

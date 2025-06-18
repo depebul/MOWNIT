@@ -20,7 +20,7 @@
         "W kolejnych próbach $m$ wzrasta o 1, tzn. między każde dwa sąsiednie węzły dodawany jest nowy węzeł, a ich zagęszczenie zwiększa się dwukrotnie.\n",
         "Przyjmij zakres wartości $m$ od 1 do 25.\n"
       ],
-      "id": "79d0b108"
+      "id": "d6012f57"
     },
     {
       "cell_type": "code",
@@ -35,7 +35,7 @@
         "\n",
         "sns.set_style(\"darkgrid\")"
       ],
-      "id": "3450367c",
+      "id": "583d8310",
       "execution_count": null,
       "outputs": []
     },
@@ -53,7 +53,7 @@
         "m_vec = np.arange(1, 26)\n",
         "n_vec = 2**m_vec + 1"
       ],
-      "id": "bda3ec01",
+      "id": "543398a5",
       "execution_count": null,
       "outputs": []
     },
@@ -77,7 +77,7 @@
         "def simpson(xs, f):\n",
         "    return integrate.simpson(f(xs), x=xs)"
       ],
-      "id": "58174ef2",
+      "id": "31a779fa",
       "execution_count": null,
       "outputs": []
     },
@@ -97,7 +97,7 @@
         "        values.append(value)\n",
         "    values_list.append(values)"
       ],
-      "id": "532cf535",
+      "id": "b0a72284",
       "execution_count": null,
       "outputs": []
     },
@@ -114,7 +114,7 @@
         "        errors.append(error)\n",
         "    errors_list.append(errors)"
       ],
-      "id": "3d2d28d2",
+      "id": "b870b9af",
       "execution_count": null,
       "outputs": []
     },
@@ -126,7 +126,7 @@
         "liczby ewaluacji funkcji podcałkowej, $n+1$ (gdzie $n = 1/h$, z krokiem $h$).\n",
         "Wyniki przedstaw na wspólnym wykresie, używając skali logarytmicznej na obu osiach.\n"
       ],
-      "id": "4d898ae8"
+      "id": "4d1ad952"
     },
     {
       "cell_type": "code",
@@ -145,7 +145,7 @@
         "plt.legend()\n",
         "plt.show()"
       ],
-      "id": "eb78fab1",
+      "id": "cd0e6c26",
       "execution_count": null,
       "outputs": []
     },
@@ -161,7 +161,7 @@
         "Czy istnieje pewna wartość, poniżej której zmniejszanie kroku $h$ nie zmniejsza już błędu kwadratury?\n",
         "Porównaj wartość $h_{\\min}$, odpowiadającą minimum wartości bezwzględnej błędu względnego, z wartością wyznaczoną w laboratorium 1.\n"
       ],
-      "id": "4e87680b"
+      "id": "d11f66c3"
     },
     {
       "cell_type": "code",
@@ -183,7 +183,7 @@
         ")\n",
         "display(min_df)"
       ],
-      "id": "fe791e19",
+      "id": "256f5add",
       "execution_count": null,
       "outputs": []
     },
@@ -202,7 +202,7 @@
         "Dla każdej z użytych metod porównaj empiryczny rząd zbieżności z rząd zbieżności przewidywanym przez teorię.\n",
         "Aby wyniki miały sens, do obliczenia rzędu empirycznego użyj wartości $h$ z zakresu, w którym błąd metody przeważa nad błędem numerycznym.\n"
       ],
-      "id": "e25aaaef"
+      "id": "8e0244f8"
     },
     {
       "cell_type": "code",
@@ -210,7 +210,7 @@
       "source": [
         "emp_conv_list = [2, 2, 4]"
       ],
-      "id": "deda632c",
+      "id": "bf49c84f",
       "execution_count": null,
       "outputs": []
     },
@@ -241,7 +241,7 @@
         "conv_df_simp = pd.DataFrame(conv_simp, columns=[\"Simpson\"])\n",
         "display(conv_df_simp)"
       ],
-      "id": "bee068bc",
+      "id": "ebe93d34",
       "execution_count": null,
       "outputs": []
     },
@@ -251,7 +251,7 @@
       "source": [
         "Obliczone rzędy zbieżności dla metody prostokątów i trapezów to 2 (zgodne z teoretycznym rzędem zbieżności), a dla metody Simpsona 6 - co nie zgadza się z wartością teoretyczną równą 4. Może to wynikać z faktu, że precyzja obliczeń nie pozwala obliczyć rzędu dla kolejnych wartości $m$.\n"
       ],
-      "id": "f22a829d"
+      "id": "79d52042"
     }
   ],
   "metadata": {
