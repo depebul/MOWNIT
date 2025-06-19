@@ -6,7 +6,7 @@
       "source": [
         "# Laboratorium 7 - Kwadratury adaptacyjne\n"
       ],
-      "id": "aa0493e5"
+      "id": "976fc5eb"
     },
     {
       "cell_type": "code",
@@ -21,7 +21,7 @@
         "\n",
         "sns.set_style(\"darkgrid\")"
       ],
-      "id": "ade3c813",
+      "id": "0c6776b6",
       "execution_count": null,
       "outputs": []
     },
@@ -44,7 +44,7 @@
         "$\\texttt{scipy.integrate.quad\\_vec}$. Na liczbę ewaluacji funkcji podcałkowej można\n",
         "wpływać pośrednio, zmieniając wartość dopuszczalnego błędu (tolerancji). Przyjmij wartości tolerancji z zakresu od $10^0$ do $10^{−14}$. Liczba ewalulacji funkcji pod-całkowej zwracana jest w zmiennej $\\texttt{info.neval}$.\n"
       ],
-      "id": "93c8e99f"
+      "id": "e73b49b7"
     },
     {
       "cell_type": "code",
@@ -60,7 +60,7 @@
         "m_vec = np.arange(1, 26)\n",
         "n_vec = 2**m_vec + 1"
       ],
-      "id": "925954d3",
+      "id": "060488db",
       "execution_count": null,
       "outputs": []
     },
@@ -96,7 +96,7 @@
         "        f, a, b, epsrel=epsrel, quadrature=\"gk21\", full_output=True\n",
         "    )"
       ],
-      "id": "16b26bbe",
+      "id": "6827780a",
       "execution_count": null,
       "outputs": []
     },
@@ -125,7 +125,7 @@
         "gauss_values = [np.sum(f(x) * 0.5 * w) for x, w in zip(x_vec_gauss, y_vec_gauss)]\n",
         "gauss_errors = [np.abs(value - np.pi) / np.pi for value in gauss_values]"
       ],
-      "id": "22ee21be",
+      "id": "b59f94d7",
       "execution_count": null,
       "outputs": []
     },
@@ -154,7 +154,7 @@
         "    errors_list.append(errors)\n",
         "    x_arr.append(x_arr_1)"
       ],
-      "id": "3544ebe4",
+      "id": "62c9cf0c",
       "execution_count": null,
       "outputs": []
     },
@@ -178,7 +178,7 @@
         "plt.legend()\n",
         "plt.show()"
       ],
-      "id": "5f05324b",
+      "id": "5a31ce09",
       "execution_count": null,
       "outputs": []
     }

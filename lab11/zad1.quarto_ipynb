@@ -6,7 +6,7 @@
       "source": [
         " # Laboratorium 11 - Spadek wzdłuż gradientu\n"
       ],
-      "id": "b78148d6"
+      "id": "e221ad43"
     },
     {
       "cell_type": "code",
@@ -20,7 +20,7 @@
         "from scipy.optimize import golden\n",
         "from itertools import cycle"
       ],
-      "id": "d56a89cc",
+      "id": "0386bc25",
       "execution_count": null,
       "outputs": []
     },
@@ -36,7 +36,7 @@
         "* Teoretyczną złożoność obliczeniową\n",
         "* Czas obliczeń.\n"
       ],
-      "id": "b3f116e3"
+      "id": "9bc8dd5d"
     },
     {
       "cell_type": "code",
@@ -51,7 +51,7 @@
         "    \"breast-cancer-validate.dat\", header=None, names=column_names\n",
         ")"
       ],
-      "id": "ce589ca6",
+      "id": "8af27a4b",
       "execution_count": null,
       "outputs": []
     },
@@ -91,7 +91,7 @@
         "A_train_quadratic = create_quadratic_features(train_data)\n",
         "A_validate_quadratic = create_quadratic_features(validate_data)"
       ],
-      "id": "eda01500",
+      "id": "70272ba5",
       "execution_count": null,
       "outputs": []
     },
@@ -109,7 +109,7 @@
         "    [[1, 0] if row == \"M\" else [0, 1] for row in validate_data[\"Malignant/Benign\"]]\n",
         ")"
       ],
-      "id": "f9a303f2",
+      "id": "4167ab2d",
       "execution_count": null,
       "outputs": []
     },
@@ -121,7 +121,7 @@
         "    S = X @ W\n",
         "    return S == np.max(S, axis=1, keepdims=True)"
       ],
-      "id": "bd2067c8",
+      "id": "cc0488ce",
       "execution_count": null,
       "outputs": []
     },
@@ -143,7 +143,7 @@
         "\n",
         "    print(log)"
       ],
-      "id": "8c0b43b1",
+      "id": "5306e00b",
       "execution_count": null,
       "outputs": []
     },
@@ -159,7 +159,7 @@
         "    n = X.shape[0]\n",
         "    return (1.0 / n) * X.T @ (S - T)"
       ],
-      "id": "584f5acc",
+      "id": "a43cfd55",
       "execution_count": null,
       "outputs": []
     },
@@ -195,7 +195,7 @@
         "\n",
         "    return W, stats"
       ],
-      "id": "2005fffe",
+      "id": "b620cddd",
       "execution_count": null,
       "outputs": []
     },
@@ -208,7 +208,7 @@
         "lambda_max = np.max(ATA_eigenvalues)\n",
         "condition_no = lambda_max / lambda_min"
       ],
-      "id": "277aeb58",
+      "id": "38f615d4",
       "execution_count": null,
       "outputs": []
     },
@@ -223,7 +223,7 @@
         "\n",
         "print(X.shape, T.shape, X_val.shape, T_val.shape)"
       ],
-      "id": "02ff8770",
+      "id": "d9378659",
       "execution_count": null,
       "outputs": []
     },
@@ -233,7 +233,7 @@
       "source": [
         "W0 = np.zeros((31, 2))"
       ],
-      "id": "4672d055",
+      "id": "0ca18bf0",
       "execution_count": null,
       "outputs": []
     },
@@ -278,7 +278,7 @@
         "plt.tight_layout()\n",
         "plt.show()"
       ],
-      "id": "7f500c5c",
+      "id": "146b43a6",
       "execution_count": null,
       "outputs": []
     },
@@ -292,7 +292,7 @@
         "\n",
         "Wynika to bezpośrednio ze złożoności obliczeniowej, która dla metody najmniejszych kwadratów wynosi $O(n^{3})$, gdzie $n$ to liczba parametrów, natomiast dla gradient descent - $O(ndk)$, gdzie $n$ to liczba iteracji, $d$ to liczba parametrów, a $k$ to liczba punktów danych. Stąd gradient descent może sprawdzać się tylko dla dużych liczb parametrów.\n"
       ],
-      "id": "f7d2538c"
+      "id": "71e11962"
     }
   ],
   "metadata": {
